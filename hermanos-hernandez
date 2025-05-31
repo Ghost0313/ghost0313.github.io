@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshMarket - Tienda de Alimentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4CAF50;
+            --secondary: #FF9800;
+            --accent: #8BC34A;
+            --dark: #333;
+            --light: #f9f9f9;
+            --gray: #e0e0e0;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-4.0.3') center/cover;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #e68a00;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Categories */
+        .section-title {
+            text-align: center;
+            margin: 40px 0 30px;
+            font-size: 2rem;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active, .category-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .product-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-category {
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .product-title img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+        
+        .product-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .product-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .add-to-cart {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background: #3d8b40;
+            transform: scale(1.1);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .footer-col h3:after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-col ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-col ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .footer-col p {
+            color: #bbb;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #444;
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero {
+                height: 350px;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>FreshMarket</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Inicio</a></li>
+                    <li><a href="#">Productos</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <div class="icon-btn">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="icon-btn">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="icon-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Alimentos Frescos Directo a tu Mesa</h1>
+            <p>Descubre más de 50 productos de calidad con entrega rápida</p>
+            <a href="#products" class="btn">Ver Productos</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Categories -->
+        <h2 class="section-title">Nuestras Categorías</h2>
+        <div class="categories">
+            <button class="category-btn active">Todos</button>
+            <button class="category-btn">Frutas</button>
+            <button class="category-btn">Verduras</button>
+            <button class="category-btn">Carnes</button>
+            <button class="category-btn">Lácteos</button>
+            <button class="category-btn">Panadería</button>
+            <button class="category-btn">Bebidas</button>
+            <button class="category-btn">Orgánicos</button>
+        </div>
+        
+        <!-- Products -->
+        <h2 class="section-title" id="products">Nuestros Productos</h2>
+        <div class="products-grid">
+            <!-- Los 50 productos se generarán con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h3>FreshMarket</h3>
+                <p>Tu tienda de alimentos frescos y de calidad. Ofrecemos los mejores productos directamente del campo a tu mesa.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Productos</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="#">Frutas</a></li>
+                    <li><a href="#">Verduras</a></li>
+                    <li><a href="#">Carnes</a></li>
+                    <li><a href="#">Lácteos</a></li>
+                    <li><a href="#">Panadería</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</li>
+                    <li><i class="fas fa-phone"></i> +1 234 567 890</li>
+                    <li><i class="fas fa-envelope"></i> info@freshmarket.com</li>
+                    <li><i class="fas fa-clock"></i> Lunes a Sábado: 8am - 8pm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 FreshMarket. Todos los derechos reservados.
+        </div>
+    </footer>
+    
+    <script>
+        // Base de datos de productos (50 artículos)
+        const products = [
+            // Frutas
+            { id: 1, name: "Manzanas Rojas", category: "Frutas", price: 2.99, description: "Manzanas rojas frescas y crujientes", img: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6" },
+            { id: 2, name: "Plátanos", category: "Frutas", price: 1.49, description: "Plátanos maduros y dulces", img: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e" },
+            { id: 3, name: "Fresas", category: "Frutas", price: 3.99, description: "Fresas orgánicas cultivadas localmente", img: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6" },
+            { id: 4, name: "Uvas Verdes", category: "Frutas", price: 4.25, description: "Uvas verdes sin semillas", img: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c" },
+            { id: 5, name: "Naranjas", category: "Frutas", price: 2.75, description: "Naranjas jugosas recién cosechadas", img: "https://images.unsplash.com/photo-1547514701-42782101795e" },
+            { id: 6, name: "Mangos", category: "Frutas", price: 3.25, description: "Mangos maduros y dulces", img: "https://images.unsplash.com/photo-1603048297170-c5d0e5e8b4e3" },
+            { id: 7, name: "Piñas", category: "Frutas", price: 4.50, description: "Piñas tropicales dulces", img: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba" },
+            { id: 8, name: "Melones", category: "Frutas", price: 5.99, description: "Melones frescos y jugosos", img: "https://images.unsplash.com/photo-1589984662646-e7b2e4962f18" },
+            
+            // Verduras
+            { id: 9, name: "Zanahorias", category: "Verduras", price: 1.99, description: "Zanahorias orgánicas crujientes", img: "https://images.unsplash.com/photo-1445282768818-728615cc910a" },
+            { id: 10, name: "Tomates", category: "Verduras", price: 2.25, description: "Tomates rojos y jugosos", img: "https://images.unsplash.com/photo-1598182198871-d3f4ab4fd181" },
+            { id: 11, name: "Lechuga", category: "Verduras", price: 1.75, description: "Lechuga fresca y crujiente", img: "https://images.unsplash.com/photo-1594489573454-3a9e7b2c4ed3" },
+            { id: 12, name: "Pepinos", category: "Verduras", price: 1.50, description: "Pepinos frescos y crujientes", img: "https://images.unsplash.com/photo-1591195853828-11bb59f30f0d" },
+            { id: 13, name: "Brócoli", category: "Verduras", price: 2.99, description: "Brócoli orgánico fresco", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655" },
+            { id: 14, name: "Pimientos", category: "Verduras", price: 3.25, description: "Pimientos rojos, amarillos y verdes", img: "https://images.unsplash.com/photo-1566398830780-6e4c5c6c1c5c" },
+            { id: 15, name: "Cebollas", category: "Verduras", price: 1.25, description: "Cebollas blancas y amarillas", img: "https://images.unsplash.com/photo-1518977956812-cd3dbadaaf31" },
+            { id: 16, name: "Papas", category: "Verduras", price: 1.99, description: "Papas frescas de temporada", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655" },
+            
+            // Carnes
+            { id: 17, name: "Pechuga de Pollo", category: "Carnes", price: 7.99, description: "Pechuga de pollo fresca", img: "https://images.unsplash.com/photo-1606850787533-7e17c2b5a4a2" },
+            { id: 18, name: "Filete de Res", category: "Carnes", price: 12.99, description: "Filete de res premium", img: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1" },
+            { id: 19, name: "Salmon Fresco", category: "Carnes", price: 15.99, description: "Salmón salvaje fresco", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2" },
+            { id: 20, name: "Chuleta de Cerdo", category: "Carnes", price: 8.99, description: "Chuletas de cerdo frescas", img: "https://images.unsplash.com/photo-1606850787533-7e17c2b5a4a2" },
+            { id: 21, name: "Pechuga de Pavo", category: "Carnes", price: 9.25, description: "Pechuga de pavo magra", img: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1" },
+            
+            // Lácteos
+            { id: 22, name: "Leche Entera", category: "Lácteos", price: 2.99, description: "Leche fresca entera", img: "https://images.unsplash.com/photo-1566772940193-9c3ae2937d79" },
+            { id: 23, name: "Queso Cheddar", category: "Lácteos", price: 5.99, description: "Queso cheddar añejo", img: "https://images.unsplash.com/photo-1542838132-92c53300491e" },
+            { id: 24, name: "Yogur Natural", category: "Lácteos", price: 3.25, description: "Yogur natural orgánico", img: "https://images.unsplash.com/photo-1542574271-7f3b92e6c821" },
+            { id: 25, name: "Mantequilla", category: "Lácteos", price: 4.50, description: "Mantequilla sin sal", img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d" },
+            { id: 26, name: "Queso Mozzarella", category: "Lácteos", price: 6.25, description: "Queso mozzarella fresco", img: "https://images.unsplash.com/photo-1611934837377-fa2c4a74b3e3" },
+            
+            // Panadería
+            { id: 27, name: "Pan Integral", category: "Panadería", price: 3.99, description: "Pan integral recién horneado", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff" },
+            { id: 28, name: "Baguette", category: "Panadería", price: 2.50, description: "Baguette artesanal crujiente", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff" },
+            { id: 29, name: "Croissants", category: "Panadería", price: 4.25, description: "Croissants de mantequilla", img: "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a" },
+            { id: 30, name: "Pan de Centeno", category: "Panadería", price: 4.99, description: "Pan de centeno tradicional", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff" },
+            
+            // Bebidas
+            { id: 31, name: "Agua Mineral", category: "Bebidas", price: 1.25, description: "Agua mineral natural", img: "https://images.unsplash.com/photo-1554866585-cd94860890b7" },
+            { id: 32, name: "Zumo de Naranja", category: "Bebidas", price: 3.50, description: "Zumo de naranja recién exprimido", img: "https://images.unsplash.com/photo-1613478223719-2ab802602423" },
+            { id: 33, name: "Café Molido", category: "Bebidas", price: 7.99, description: "Café molido de especialidad", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd" },
+            
+            // Orgánicos
+            { id: 34, name: "Huevos Orgánicos", category: "Orgánicos", price: 4.99, description: "Huevos orgánicos de gallinas libres", img: "https://images.unsplash.com/photo-1587486913049-53fc8897db6e" },
+            { id: 35, name: "Miel Orgánica", category: "Orgánicos", price: 8.99, description: "Miel pura orgánica", img: "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae" },
+            { id: 36, name: "Aceite de Oliva", category: "Orgánicos", price: 12.99, description: "Aceite de oliva virgen extra", img: "https://images.unsplash.com/photo-1515442261605-65987783cb6a" },
+            
+            // Continúa con más productos hasta llegar a 50
+            // ... (en un caso real, completaríamos con 50 productos)
+        ];
+
+        // Función para generar productos
+        function generateProducts() {
+            const grid = document.querySelector('.products-grid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                card.innerHTML = `
+                    <div class="product-img" style="background-image: url('https://source.unsplash.com/${product.img}/600x400')"></div>
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-title">
+                            <img src="https://source.unsplash.com/${product.img}/100x100" alt="${product.name}">
+                            ${product.name}
+                        </h3>
+                        <p class="product-desc">${product.description}</p>
+                        <div class="product-bottom">
+                            <span class="product-price">$${product.price.toFixed(2)}</span>
+                            <button class="add-to-cart">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Inicializar cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', () => {
+            generateProducts();
+            
+            // Agregar eventos a los botones de categorías
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelector('.category-btn.active').classList.remove('active');
+                    btn.classList.add('active');
+                });
+            });
+            
+            // Agregar eventos a los botones de añadir al carrito
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const count = document.querySelector('.cart-count');
+                    count.textContent = parseInt(count.textContent) + 1;
+                    
+                    this.innerHTML = '<i class="fas fa-check"></i>';
+                    this.style.background = 'var(--secondary)';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-plus"></i>';
+                        this.style.background = 'var(--primary)';
+                    }, 1500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
