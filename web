@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Tienda Online</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            background: url('https://images.unsplash.com/photo-1607082350899-7e105aa886ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover;
+            padding: 80px 0;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            background: white;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-img {
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(45deg, #f5f7fa, #e4e7f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+        }
+        
+        .product-img i {
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+        
+        .cart-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .btn-add-to-cart {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
+        }
+        
+        .btn-download {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-weight: bold;
+        }
+        
+        .btn-download:hover {
+            box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4);
+        }
+        
+        .total-box {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            text-align: center;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-store me-2"></i>Hermanos-González
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-shopping-cart me-1"></i> Carrito</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-info-circle me-1"></i> Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container position-relative">
+            <h1 class="display-4 fw-bold mb-3">Hermanos-González</h1>
+            <p class="lead mb-4">Todos los productos que necesitas a precios increíbles</p>
+            <div class="search-box">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" placeholder="Buscar productos...">
+                    <button class="btn btn-light" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Products Column -->
+            <div class="col-lg-8">
+                <h2 class="section-title">Nuestros Productos</h2>
+                
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <!-- Productos generados dinámicamente con JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Cart Column -->
+            <div class="col-lg-4 mt-5 mt-lg-0">
+                <div class="cart-container">
+                    <h3 class="mb-4 text-center"><i class="fas fa-shopping-cart me-2"></i>Tu Carrito</h3>
+                    
+                    <div id="cart-items" class="mb-4">
+                        <!-- Items del carrito se añadirán aquí -->
+                        <div class="text-center p-4 text-muted">
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                            <p>Tu carrito está vacío</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Total:</h5>
+                        <div id="cart-total" class="total-box">$0.00</div>
+                    </div>
+                    
+                    <button id="download-btn" class="btn btn-download mt-3">
+                        <i class="fas fa-download me-2"></i>Descargar Nota
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <h4><i class="fas fa-store me-2"></i>Hermanos-González</h4>
+            <p class="mb-3">Todos los productos que necesitas en un solo lugar</p>
+            <div class="mb-4">
+                <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-2x"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-whatsapp fa-2x"></i></a>
+            </div>
+            <p class="mb-0">&copy; 2023 Mi Tienda Online. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Productos con precios
+        const products = [
+            { name: "Reflata", price: 200, category: "hogar" },
+            { name: "Lumini", price: 35, category: "hogar" },
+            { name: "Jabas", price: 10, category: "hogar" },
+            { name: "JugoLimon", price: 650, category: "bebidas" },
+            { name: "Nutella", price: 750, category: "alimentos" },
+            { name: "Mayonesa", price: 1350, category: "alimentos" },
+            { name: "CafeExpreso", price: 1350, category: "bebidas" },
+            { name: "maniToni", price: 300, category: "snacks" },
+            { name: "Milner", price: 670, category: "lacteos" },
+            { name: "Picadillo", price: 280, category: "carnes" },
+            { name: "muu", price: 55, category: "lacteos" },
+            { name: "Papitas", price: 250, category: "snacks" },
+            { name: "ChupaChupa", price: 40, category: "dulces" },
+            { name: "crokantinas", price: 140, category: "dulces" },
+            { name: "LataCarne", price: 570, category: "conservas" },
+            { name: "Harina", price: 250, category: "alimentos" },
+            { name: "Azucar", price: 260, category: "alimentos" },
+            { name: "Sal", price: 80, category: "alimentos" },
+            { name: "CervezaUnlaguer", price: 190, category: "bebidas" },
+            { name: "CervezaMayabe", price: 230, category: "bebidas" },
+            { name: "Guayaba", price: 330, category: "frutas" },
+            { name: "PastaTomateCento", price: 300, category: "alimentos" },
+            { name: "MentaPlus", price: 80, category: "cuidado" },
+            { name: "Brinky", price: 60, category: "bebidas" },
+            { name: "desodorante", price: 750, category: "cuidado" },
+            { name: "limpiador", price: 900, category: "limpieza" },
+            { name: "crema", price: 1000, category: "cuidado" },
+            { name: "LocionBebe", price: 900, category: "cuidado" },
+            { name: "Escolares", price: 55, category: "otros" },
+            { name: "Mayonesa", price: 580, category: "alimentos" },
+            { name: "Mayonesa", price: 5500, category: "alimentos" },
+            { name: "Caldo de Pollo", price: 40, category: "alimentos" },
+            { name: "Widmill", price: 230, category: "bebidas" },
+            { name: "Goya", price: 60, category: "bebidas" },
+            { name: "Vino Trapiche", price: 1500, category: "bebidas" },
+            { name: "Vino Tinto", price: 1600, category: "bebidas" },
+            { name: "Cristal", price: 250, category: "bebidas" },
+            { name: "Salchicha 3kg", price: 3135, category: "carnes" },
+            { name: "GallSal", price: 350, category: "carnes" },
+            { name: "Jamonada", price: 1200, category: "carnes" },
+            { name: "Harina Bolsa 1kg", price: 650, category: "alimentos" },
+            { name: "JugoCajita", price: 170, category: "bebidas" },
+            { name: "Jabon Pack", price: 350, category: "limpieza" },
+            { name: "Pasta Tomate", price: 450, category: "alimentos" },
+            { name: "Corona", price: 450, category: "bebidas" },
+            { name: "Disco Corte", price: 150, category: "otros" },
+            { name: "Frasada de piso", price: 250, category: "hogar" },
+            { name: "Modulo Aceite", price: 2240, category: "hogar" },
+            { name: "Arroz", price: 280, category: "alimentos" },
+            { name: "Mantequilla", price: 280, category: "lacteos" },
+            { name: "Maria", price: 55, category: "dulces" },
+            { name: "BlackOUt", price: 100, category: "otros" },
+            { name: "Pasta Dental", price: 750, category: "cuidado" },
+            { name: "Yogurt Grande", price: 1400, category: "lacteos" },
+            { name: "Yogurt Chico", price: 750, category: "lacteos" },
+            { name: "Bolsa Arroz", price: 620, category: "alimentos" },
+            { name: "Aceite a granel 1L", price: 990, category: "alimentos" },
+            { name: "Chicharon", price: 160, category: "snacks" },
+            { name: "Agua Grande", price: 200, category: "bebidas" },
+            { name: "Botoneta", price: 40, category: "otros" },
+            { name: "Mantecado", price: 35, category: "dulces" },
+            { name: "cerveza Cacique", price: 230, category: "bebidas" },
+            { name: "Milner Botella", price: 1500, category: "bebidas" },
+            { name: "ron 24", price: 1350, category: "bebidas" },
+            { name: "detergente liquido", price: 450, category: "limpieza" },
+            { name: "marie galletitas", price: 280, category: "snacks" },
+            { name: "picadillo tubo", price: 450, category: "carnes" },
+            { name: "mayonesa chef", price: 1500, category: "alimentos" },
+            { name: "frijol bolsa", price: 250, category: "alimentos" },
+            { name: "pollo x lib", price: 350, category: "carnes" }
+        ];
+
+        // Variables para el carrito
+        let cart = [];
+        const cartItemsElement = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        const downloadBtn = document.getElementById('download-btn');
+        const productsContainer = document.querySelector('.row-cols-1');
+
+        // Función para renderizar productos
+        function renderProducts() {
+            productsContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'col';
+                productCard.innerHTML = `
+                    <div class="product-card h-100 position-relative">
+                        <span class="category-badge badge bg-primary">${product.category}</span>
+                        <div class="product-img">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="card-body p-3">
+                            <h5 class="card-title mb-1">${product.name}</h5>
+                            <p class="text-muted small mb-2">${getCategoryName(product.category)}</p>
+                            <h4 class="text-primary mb-3">$${product.price.toLocaleString()}</h4>
+                            <button class="btn btn-add-to-cart w-100" data-id="${product.name}" data-price="${product.price}">
+                                <i class="fas fa-cart-plus me-2"></i>Añadir al carrito
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+            
+            // Añadir event listeners a los botones
+            document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+        }
+
+        // Función para obtener nombre de categoría
+        function getCategoryName(category) {
+            const categories = {
+                "hogar": "Hogar",
+                "bebidas": "Bebidas",
+                "alimentos": "Alimentos",
+                "snacks": "Snacks",
+                "lacteos": "Lácteos",
+                "carnes": "Carnes",
+                "dulces": "Dulces",
+                "conservas": "Conservas",
+                "frutas": "Frutas",
+                "cuidado": "Cuidado Personal",
+                "limpieza": "Limpieza",
+                "otros": "Otros"
+            };
+            return categories[category] || "General";
+        }
+
+        // Función para añadir al carrito
+        function addToCart(e) {
+            const button = e.currentTarget;
+            const name = button.getAttribute('data-id');
+            const price = parseFloat(button.getAttribute('data-price'));
+            
+            // Buscar si el producto ya está en el carrito
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    name,
+                    price,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            
+            // Animación de confirmación
+            button.innerHTML = '<i class="fas fa-check me-2"></i>Añadido';
+            button.classList.add('btn-success');
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-cart-plus me-2"></i>Añadir al carrito';
+                button.classList.remove('btn-success');
+            }, 1500);
+        }
+
+        // Función para actualizar el carrito
+        function updateCart() {
+            // Limpiar carrito
+            cartItemsElement.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsElement.innerHTML = `
+                    <div class="text-center p-4 text-muted">
+                        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                        <p>Tu carrito está vacío</p>
+                    </div>
+                `;
+                cartTotalElement.textContent = '$0.00';
+                downloadBtn.disabled = true;
+                return;
+            }
+            
+            let total = 0;
+            
+            // Añadir productos al carrito
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">${item.name}</h6>
+                            <small class="text-muted">$${item.price.toLocaleString()} x ${item.quantity}</small>
+                        </div>
+                        <div>
+                            <span class="fw-bold">$${itemTotal.toLocaleString()}</span>
+                            <button class="btn btn-sm btn-outline-danger ms-2 remove-item" data-name="${item.name}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                cartItemsElement.appendChild(cartItemElement);
+            });
+            
+            // Actualizar total
+            cartTotalElement.textContent = `$${total.toLocaleString()}`;
+            downloadBtn.disabled = false;
+            
+            // Añadir event listeners para eliminar
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', removeFromCart);
+            });
+        }
+
+        // Función para eliminar del carrito
+        function removeFromCart(e) {
+            const name = e.currentTarget.getAttribute('data-name');
+            cart = cart.filter(item => item.name !== name);
+            updateCart();
+        }
+
+        // Función para generar la nota en PDF
+        function generatePDF() {
+            if (cart.length === 0) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Encabezado
+            doc.setFontSize(22);
+            doc.setTextColor(78, 84, 200);
+            doc.text('Mi Tienda Online', 105, 20, null, null, 'center');
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Nota de Compra', 105, 30, null, null, 'center');
+            
+            // Información de la compra
+            const date = new Date();
+            doc.text(`Fecha: ${date.toLocaleDateString()}`, 15, 40);
+            doc.text(`Hora: ${date.toLocaleTimeString()}`, 15, 45);
+            
+            // Tabla de productos
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            
+            // Encabezado de tabla
+            doc.setFillColor(78, 84, 200);
+            doc.setTextColor(255, 255, 255);
+            doc.rect(15, 55, 180, 8, 'F');
+            doc.text('Producto', 25, 60);
+            doc.text('Cantidad', 120, 60);
+            doc.text('Total', 160, 60);
+            
+            // Productos
+            let y = 65;
+            let total = 0;
+            
+            doc.setFillColor(255, 255, 255);
+            doc.setTextColor(0, 0, 0);
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                doc.text(item.name, 20, y);
+                doc.text(item.quantity.toString(), 120, y);
+                doc.text(`$${itemTotal.toLocaleString()}`, 160, y);
+                y += 7;
+            });
+            
+            // Total
+            y += 10;
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`TOTAL: $${total.toLocaleString()}`, 160, y, null, null, 'right');
+            
+            // Pie de página
+            y += 20;
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Gracias por su compra!', 105, y, null, null, 'center');
+            y += 5;
+            doc.text('Para cualquier consulta, contacte con nuestro servicio al cliente', 105, y, null, null, 'center');
+            
+            // Guardar PDF
+            doc.save(`nota-compra-${date.getTime()}.pdf`);
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            downloadBtn.addEventListener('click', generatePDF);
+        });
+    </script>
+</body>
+</html>
